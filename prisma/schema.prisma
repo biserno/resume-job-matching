@@ -1,11 +1,35 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
+}
+
+model Resume {
+  id           Int           @id @default(autoincrement())
+  fileName     String
+  content      String
+  createdAt    DateTime      @default(now())
+  matchResults MatchResult[]
+}
+
+model JobDescription {
+  id           Int           @id @default(autoincrement())
+  title        String
+  content      String
+  createdAt    DateTime      @default(now())
+  matchResults MatchResult[]
+}
+
+model MatchResult {
+  id            Int      @id @default(autoincrement())
+  resumeId      Int
+  jobId         Int
+  score         Float
+  missingSkills String
+  createdAt     DateTime @default(now())
+
+  resume Resume         @relation(fields: [resumeId], references: [id])
+  job    JobDescription @relation(fields: [jobId], references: [id])
 }
